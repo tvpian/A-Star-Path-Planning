@@ -51,8 +51,8 @@ class Visualizer:
                 frames=range(len(self.nodes)//self.step_size),
                 blit=True)
 
-        plt.show()
-        # self.save_animation("../results/matplotlib.mp4")
+        # plt.show()
+        self.save_animation("../results/matplotlib.mp4")
 
     def save_animation(self, filename) -> None:
         """
@@ -96,13 +96,13 @@ class Visualizer:
         for i in range(self.step_size):
             if self.nodes[(frame * self.step_size) + i].parent is None:
                 continue
-            # x1 = np.array((self.nodes[(frame * self.step_size) + i].parent.state[0]))
-            # y1 = np.array((self.nodes[(frame * self.step_size) + i].parent.state[1]))
-            # x2 = np.array((self.nodes[(frame * self.step_size) + i].state[0])) - x1 
-            # y2 = np.array((self.nodes[(frame * self.step_size) + i].state[1])) - y1 
-            # self.ax.quiver(x1, y1, x2, y2,units='xy' ,scale=1)
-            self.x_vals.append(self.nodes[(frame*self.step_size) + i].state[0])
-            self.y_vals.append(self.nodes[(frame*self.step_size) + i].state[1])
+            x1 = np.array((self.nodes[(frame * self.step_size) + i].parent.state[0]))
+            y1 = np.array((self.nodes[(frame * self.step_size) + i].parent.state[1]))
+            x2 = np.array((self.nodes[(frame * self.step_size) + i].state[0])) - x1 
+            y2 = np.array((self.nodes[(frame * self.step_size) + i].state[1])) - y1 
+            self.ax.quiver(x1, y1, x2, y2,units='xy' ,scale=1)
+            # self.x_vals.append(self.nodes[(frame*self.step_size) + i].state[0])
+            # self.y_vals.append(self.nodes[(frame*self.step_size) + i].state[1])
 
         self.ln.set_data(self.x_vals, self.y_vals)
 

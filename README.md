@@ -1,5 +1,10 @@
 # ENPM 661 - Project 3
 
+## Team
+
+* Abhijay Singh (UID - 118592619)
+* Tharun Puthanveettil (UID - 119069516)
+
 ## Dependencies
 
 * python3 interpreter
@@ -54,6 +59,8 @@
         Final node in the path : [11.02885683 10.89745962]
         Number of nodes explored : 10460
         ```
+    
+    - The animation video link - [Videos](https://drive.google.com/drive/folders/10thXvk4uNb31oMe0pjVKG6o6Dnd6WHWf?usp=share_link)
 
 ## Help
 For any assistance with executing the programs or questions related to them, please reach out to us at abhijay@umd.edu or tvpian@umd.edu.

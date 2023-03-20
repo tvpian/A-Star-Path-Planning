@@ -83,7 +83,7 @@ class Map:
             return True             
 
         # Hexagon
-        if (i >= (235 - self.clearance)) and (i <= (365 + self.clearance)) and ((i + 2*j) >= 390 - self.clearance) and ((i - 2*j) <= 210 + self.clearance) and ((i - 2*j) >= -130 + self.clearance) and ((i + 2*j) <= 710 + self.clearance):
+        if (i >= (235 - self.clearance)) and (i <= (365 + self.clearance)) and ((i + 2*j) >= 400 - self.clearance) and ((i - 2*j) <= 200 + self.clearance) and ((i - 2*j) >= -100 + self.clearance) and ((i + 2*j) <= 700 + self.clearance):
             return True             
 
         # Walls

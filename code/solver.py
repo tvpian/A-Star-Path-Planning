@@ -26,8 +26,10 @@ class AStarSolver:
         self.open_hash = set()
         self.closed = OrderedDict()
 
-        self.threshold = 1.5
+        self.goal_threshold = 1.5
         self.angle_threshold = 30
+
+        self.visited = np.zeros((int(self.map.width/self.start.resolution[0]), int(self.map.height/self.start.resolution[1]), int(360/self.start.resolution[2])))
 
     def _check_goal(self, node : Node) -> bool:
         """
@@ -43,7 +45,7 @@ class AStarSolver:
         bool
             True if the node is the goal node, False otherwise.
         """
-        return np.linalg.norm(node.state[:2] - self.goal.state[:2]) <= self.threshold and np.abs(node.state[2] - self.goal.state[2]) <= self.angle_threshold
+        return np.linalg.norm(node.state[:2] - self.goal.state[:2]) <= self.goal_threshold
     
     def _generate_path(self, node : Node) -> list:
         """
@@ -65,6 +67,28 @@ class AStarSolver:
             node = node.parent
         return path[::-1]
     
+    def _check_visited(self, node : Node) -> bool:
+        """
+        Check if the node has been visited.
+
+        Parameters
+        ----------
+        node : Node
+            The node to check.
+
+        Returns
+        -------
+        bool
+            True if the node has been visited, False otherwise.
+        """
+        x = int(node.state[0] / self.start.resolution[0])
+        y = int(node.state[1] / self.start.resolution[1])
+        theta = int(node.state[2] / self.start.resolution[2])
+        if self.visited[x, y, theta] != 1:
+            self.visited[x, y, theta] = 1
+            return False
+        return True
+
     def solve(self) -> list:
         """
         Solve the problem.
@@ -80,7 +104,7 @@ class AStarSolver:
         while not self.open.empty():
             node = self.open.get()[1]
             self.open_hash.remove(hash(node))
-            
+
             if self._check_goal(node):
                 path = self._generate_path(node)
                 return path
@@ -89,7 +113,7 @@ class AStarSolver:
 
             for child in node.get_children():
                 hash_val = hash(child)
-                if self.map.is_valid(child):
+                if self.map.is_valid(child) and not self._check_visited(child):
                     if hash_val not in self.closed:
                         if hash_val not in self.open_hash:
                             child.cost_to_come += node.cost_to_come 

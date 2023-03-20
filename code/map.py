@@ -9,7 +9,7 @@ class Map:
     The map class.
     """
 
-    def __init__(self, width : int = 600, height : int = 250, radius : int = 5, clearance : int = 5):
+    def __init__(self, width : int = 600, height : int = 250):
         """
         Initialize the map with the given width, height, and clearance.
 
@@ -24,12 +24,39 @@ class Map:
         """
         self.width = width
         self.height = height
-        self.robot_radius = radius
-        self.clearance = clearance + self.robot_radius
 
         self.map = np.zeros((width, height))
         self.workspace = mplPath.Path(np.array([(0, 0), [width-1, 0], [width-1, height-1], [0, height-1], [0, 0]]))
-        
+
+    def _set_obstacles(self):
+        """
+        Set the obstacles on the map.
+        """
+        for i in range(self.width):
+            for j in range(self.height):
+                # Rectangles
+                if (i >= (100 - self.clearance)) and (i <= (150 + self.clearance)) and (j >= 0) and (j <= (100 + self.clearance)):
+                    self.map[i][j] = 1
+                if (i >= (100 - self.clearance)) and (i <= (150 + self.clearance)) and j >= (150 - self.clearance) and (j <= self.height):
+                    self.map[i][j] = 1
+
+                # Triangle
+                if (i >= (460 - self.clearance)) and (j >= (25 - self.clearance)) and (j <= (225 + self.clearance)) and ((-2*i + j) >= -895 + self.clearance) and ((2*i + j) <= 1145 - self.clearance):
+                    self.map[i][j] = 1
+
+                # Hexagon
+                if (i >= (235 - self.clearance)) and (i <= (365 + self.clearance)) and ((i + 2*j) >= 390 - self.clearance) and ((i - 2*j) <= 210 + self.clearance) and ((i - 2*j) >= -130 + self.clearance) and ((i + 2*j) <= 710 + self.clearance):
+                    self.map[i][j] = 1
+
+                # Walls
+                if i < self.clearance or i >= (self.width - self.clearance) or j < self.clearance or j >= (self.height - self.clearance):
+                    self.map[i][j] = 1
+
+    def set_clearance_radius(self, clearance : int, radius : int) -> None:
+        self._radius = radius
+        self.clearance = clearance + radius 
+        self._set_obstacles()
+
     def _is_obstacle(self, i, j):
         """
         Check if the given state is an obstacle.
@@ -56,7 +83,7 @@ class Map:
             return True             
 
         # Hexagon
-        if (i >= (235 - self.clearance)) and (i <= (365 + self.clearance)) and ((i + 2*j) >= 400 - self.clearance) and ((i - 2*j) <= 210 - self.clearance) and ((i - 2*j) >= -110 + self.clearance) and ((i + 2*j) <= 700 + self.clearance):
+        if (i >= (235 - self.clearance)) and (i <= (365 + self.clearance)) and ((i + 2*j) >= 390 - self.clearance) and ((i - 2*j) <= 210 + self.clearance) and ((i - 2*j) >= -130 + self.clearance) and ((i + 2*j) <= 710 + self.clearance):
             return True             
 
         # Walls

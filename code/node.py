@@ -5,11 +5,17 @@ class ActionSet:
     Class containing all the available node actions.
     """
 
-    def __init__(self, step_size=5, angles=[-60, -30, 0, 30, 60]):
+    def __init__(self, step_size : int = 5, angles : list = [-60, -30, 0, 30, 60]):
         """
+        Parameters
+        ----------
+        step_size : int, optional
+            The step size of the actions, by default 5
+        angles : list, optional
+            The angles of the actions, by default [-60, -30, 0, 30, 60]
         """
-        self.angles = angles
         self.step_size = step_size
+        self.angles = angles
 
     def get_actions(self, state):
         """
@@ -109,7 +115,7 @@ class Node:
         float
             The Euclidean distance between the current state and the goal state
         """
-        return np.linalg.norm(self.state[:2] - goal_node.state[:2])*0.8 + np.abs(self.state[2] - goal_node.state[2])*0.2
+        return np.linalg.norm(self.state[:2] - goal_node.state[:2])#*0.8 + np.abs(self.state[2] - goal_node.state[2])*0.2
     
     def get_children(self) -> list:
         """
@@ -124,6 +130,7 @@ class Node:
         actions = self.action_set.get_actions(self.state)
         for action, cost in actions.items():
             new_state = self.state + np.array(action)
+            new_state[2] = new_state[2] % 360
             child = Node(new_state, cost, self)
             children.append(child)
 

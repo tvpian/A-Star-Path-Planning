@@ -7,7 +7,7 @@
 
 ## Execution
 
-* **Dijkstra's Solver** 
+* **A\* Solver** 
     
     - To execute the program for this problem, navigate to the submission folder and use the following commands
         ```
@@ -38,7 +38,7 @@
     
 
 ## Results
-* **Dijkstra's Solver** 
+* **A\* Solver** 
     
     - The outputs is as shown below:
         ```

@@ -30,7 +30,7 @@
     - The program will not run if the clearance and radius are not entered in the format `clearance, radius`.
 
     - Since the quiver plot in matplotlib is not very efficient, the animation can be played in three ways.
-        - The first method is using OpenCV. Please use the function in `line 51` of the `a_star_Abhijay_Tharun.py` file. (**Suggested method**)
+        - The first method is using OpenCV. Please use the function in `line 51` of the `a_star_Abhijay_Tharun.py` file. (**Suggested method**) To record the animation, please set the `record` variable to `True` in the `visualizer.record_opencv()` function in the `a_star_Abhijay_Tharun.py` file (line **51**).
         - The second method is using matplotlib scatter plot. Please use the function in `line 50` of the `a_star_Abhijay_Tharun.py` file.
         - The third method is using matplotlib quiver plot. Please uncomment `lines 99-103` and comment `lines 103-104` in the `visualizer.py` file. (**Not recommended**)
 

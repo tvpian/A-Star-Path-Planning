@@ -126,6 +126,14 @@ class AStarSolver:
                         if cost < sn.cost_to_come:
                             sn.parent = node
                             sn.cost_to_come = cost
+                        # else:
+                        #     for i in range(self.open.qsize()):
+                        #         if self.open.queue[i][1] == child:
+                        #             child.cost_to_come += node.cost_to_come
+                        #             # priority = child.cost_to_come + child.cost_to_go(self.goal)
+                        #             if child.cost_to_come < self.open.queue[i][1].cost_to_come:
+                        #                 self.open.queue[i] = (priority, child)
+                        #             break
 
         return None
 

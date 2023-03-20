@@ -60,8 +60,6 @@ class Node:
 
         self.parent = parent
 
-        self.action_set = ActionSet()
-
     def __hash__(self) -> int:
         return hash(tuple(self.rounded_state))
        
@@ -115,7 +113,7 @@ class Node:
         float
             The Euclidean distance between the current state and the goal state
         """
-        return np.linalg.norm(self.state[:2] - goal_node.state[:2])#*0.8 + np.abs(self.state[2] - goal_node.state[2])*0.2
+        return np.linalg.norm(self.rounded_state[:2] - goal_node.state[:2])#*0.8 + np.abs(self.state[2] - goal_node.state[2])*0.2
     
     def get_children(self) -> list:
         """

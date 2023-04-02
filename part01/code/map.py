@@ -9,7 +9,7 @@ class Map:
     The map class.
     """
 
-    def __init__(self, width : int = 600, height : int = 250):
+    def __init__(self, width : int = 600, height : int = 200):
         """
         Initialize the map with the given width, height, and clearance.
 
@@ -34,23 +34,36 @@ class Map:
         """
         for i in range(self.width):
             for j in range(self.height):
-                # Rectangles
-                if (i >= (100 - self.clearance)) and (i <= (150 + self.clearance)) and (j >= 0) and (j <= (100 + self.clearance)):
-                    self.map[i][j] = 1
-                if (i >= (100 - self.clearance)) and (i <= (150 + self.clearance)) and j >= (150 - self.clearance) and (j <= self.height):
-                    self.map[i][j] = 1
+                # # Rectangles
+                # if (i >= (100 - self.clearance)) and (i <= (150 + self.clearance)) and (j >= 0) and (j <= (100 + self.clearance)):
+                #     self.map[i][j] = 1
+                # if (i >= (100 - self.clearance)) and (i <= (150 + self.clearance)) and j >= (150 - self.clearance) and (j <= self.height):
+                #     self.map[i][j] = 1
 
-                # Triangle
-                if (i >= (460 - self.clearance)) and (j >= (25 - self.clearance)) and (j <= (225 + self.clearance)) and ((-2*i + j) >= -895 + self.clearance) and ((2*i + j) <= 1145 - self.clearance):
-                    self.map[i][j] = 1
+                # # Triangle
+                # if (i >= (460 - self.clearance)) and (j >= (25 - self.clearance)) and (j <= (225 + self.clearance)) and ((-2*i + j) >= -895 + self.clearance) and ((2*i + j) <= 1145 - self.clearance):
+                #     self.map[i][j] = 1
 
-                # Hexagon
-                if (i >= (235 - self.clearance)) and (i <= (365 + self.clearance)) and ((i + 2*j) >= 390 - self.clearance) and ((i - 2*j) <= 210 + self.clearance) and ((i - 2*j) >= -130 + self.clearance) and ((i + 2*j) <= 710 + self.clearance):
-                    self.map[i][j] = 1
+                # # Hexagon
+                # if (i >= (235 - self.clearance)) and (i <= (365 + self.clearance)) and ((i + 2*j) >= 390 - self.clearance) and ((i - 2*j) <= 210 + self.clearance) and ((i - 2*j) >= -130 + self.clearance) and ((i + 2*j) <= 710 + self.clearance):
+                #     self.map[i][j] = 1
 
                 # Walls
-                if i < self.clearance or i >= (self.width - self.clearance) or j < self.clearance or j >= (self.height - self.clearance):
-                    self.map[i][j] = 1
+                try:
+                    if i < self.clearance or i >= (self.width - self.clearance) or j < self.clearance or j >= (self.height - self.clearance):
+                        self.map[i][j] = 1
+                        
+                    if (i >= (150 - self.clearance)) and (i <= (165 + self.clearance)) and j <= (125 - self.clearance) and (j >= 0):
+                        self.map[i][j] = 1
+
+                    if (i >= (250 - self.clearance)) and (i <= (265 + self.clearance)) and j >= (75 + self.clearance) and (j <= self.height):
+                        self.map[i][j] = 1
+
+                    if ((i-400)**2 + (j-110)**2 <= 50**2 ):
+                        self.map[i][j] = 1
+                except Exception:
+                    print(Exception)
+                    
 
     def set_clearance_radius(self, clearance : int, radius : int) -> None:
         self._radius = radius
@@ -72,22 +85,36 @@ class Map:
         -------
         bool
             True if the state is an obstacle, False otherwise.
-        """
-        if (i >= (100 - self.clearance)) and (i <= (150 + self.clearance)) and (j >= 0) and (j <= (100 + self.clearance)):
-            return True
-        if (i >= (100 - self.clearance)) and (i <= (150 + self.clearance)) and j >= (150 - self.clearance) and (j <= self.height):
-            return True             
+        # """
+        # if (i >= (100 - self.clearance)) and (i <= (150 + self.clearance)) and (j >= 0) and (j <= (100 + self.clearance)):
+        #     return True
+        # if (i >= (100 - self.clearance)) and (i <= (150 + self.clearance)) and j >= (150 - self.clearance) and (j <= self.height):
+        #     return True             
         
-        # Triangle
-        if (i >= (460 - self.clearance)) and (j >= (25 - self.clearance)) and (j <= (225 + self.clearance)) and ((-2*i + j) >= -895 + self.clearance) and ((2*i + j) <= 1145 - self.clearance):
-            return True             
+        # # Triangle
+        # if (i >= (460 - self.clearance)) and (j >= (25 - self.clearance)) and (j <= (225 + self.clearance)) and ((-2*i + j) >= -895 + self.clearance) and ((2*i + j) <= 1145 - self.clearance):
+        #     return True             
 
-        # Hexagon
-        if (i >= (235 - self.clearance)) and (i <= (365 + self.clearance)) and ((i + 2*j) >= 390 - self.clearance) and ((i - 2*j) <= 210 + self.clearance) and ((i - 2*j) >= -130 + self.clearance) and ((i + 2*j) <= 710 + self.clearance):
-            return True             
+        # # Hexagon
+        # if (i >= (235 - self.clearance)) and (i <= (365 + self.clearance)) and ((i + 2*j) >= 390 - self.clearance) and ((i - 2*j) <= 210 + self.clearance) and ((i - 2*j) >= -130 + self.clearance) and ((i + 2*j) <= 710 + self.clearance):
+        #     return True             
 
-        # Walls
+        # # Walls
+        # if i < self.clearance or i >= (self.width - self.clearance) or j < self.clearance or j >= (self.height - self.clearance):
+        #     return True
+        
         if i < self.clearance or i >= (self.width - self.clearance) or j < self.clearance or j >= (self.height - self.clearance):
+            return True
+
+
+        if (i >= (150 - self.clearance)) and (i <= (165 + self.clearance)) and j >= (75 - self.clearance) and (j <= self.height):
+            return True
+
+
+        if (i >= (250 - self.clearance)) and (i <= (265 + self.clearance)) and j <= (75 + self.clearance) and (j >= 0):
+            return True
+
+        if ((i-400)**2 + (j-110)**2 <= 50**2):
             return True
 
     def _is_in_bounds(self, x, y):

@@ -29,7 +29,7 @@ class AStarSolver:
         self.goal_threshold = 1.5
         self.angle_threshold = 30
 
-        self.visited = np.zeros((int(self.map.width/self.start.resolution[0]), int(self.map.height/self.start.resolution[1]), int(360/self.start.resolution[2])))
+        self.visited = np.zeros((int(self.map.width/self.start.resolution[0]), int(self.map.height/self.start.resolution[1])))
 
     def _check_goal(self, node : Node) -> bool:
         """
@@ -83,9 +83,8 @@ class AStarSolver:
         """
         x = int(node.state[0] / self.start.resolution[0])
         y = int(node.state[1] / self.start.resolution[1])
-        theta = int(node.state[2] / self.start.resolution[2])
-        if self.visited[x, y, theta] != 1:
-            self.visited[x, y, theta] = 1
+        if self.visited[x, y] != 1:
+            self.visited[x, y] = 1
             return False
         return True
 
@@ -118,23 +117,24 @@ class AStarSolver:
                         if hash_val not in self.open_hash:
                             child.cost_to_come += node.cost_to_come 
                             priority = child.cost_to_come + child.cost_to_go(self.goal)
+                            child.cost = priority
                             self.open.put((priority, child))
                             self.open_hash.add(hash_val)
-                    else:
-                        sn = self.closed[hash_val]
-                        cost = node.cost_to_come + child.cost_to_come
-                        if cost < sn.cost_to_come:
-                            sn.parent = node
-                            sn.cost_to_come = cost
-                        # else:
-                        #     for i in range(self.open.qsize()):
-                        #         if self.open.queue[i][1] == child:
-                        #             child.cost_to_come += node.cost_to_come
-                        #             # priority = child.cost_to_come + child.cost_to_go(self.goal)
-                        #             if child.cost_to_come < self.open.queue[i][1].cost_to_come:
-                        #                 self.open.queue[i] = (priority, child)
-                        #             break
-
+                    # else:
+                    #     sn = self.closed[hash_val]
+                    #     cost = node.cost_to_come + child.cost_to_come
+                    #     if cost < sn.cost_to_come:
+                    #         sn.parent = node
+                    #         sn.cost_to_come = cost
+                        else:
+                            for i in range(self.open.qsize()):
+                                if self.open.queue[i][1] == child:
+                                    cost = node.cost_to_come + child.cost_to_come
+                                    if cost < self.open.queue[i][1].cost:
+                                        self.open.queue[i][1].parent = node
+                                        self.open.queue[i][1].cost_to_come = cost
+                                        self.open.queue[i][1].cost = cost + self.open.queue[i][1].cost_to_go(self.goal)
+                           
         return None
 
     def get_explored_nodes(self) -> list:

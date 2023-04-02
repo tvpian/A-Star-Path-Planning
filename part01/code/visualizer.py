@@ -42,28 +42,13 @@ class Visualizer:
             The number of nodes to plot per frame.
         """
         self.step_size = step_size
-        # self.anim = FuncAnimation(
-        #         self.fig, 
-        #         self._update,
-        #         interval=5,
-        #         init_func=self.init,
-        #         frames=range(len(self.nodes)//self.step_size),
-        #         blit=True)
-
-        self.init()
-        for i in range(len(self.nodes)):
-            if self.nodes[i].parent is None:
-                continue
-            x1 = np.array((self.nodes[i].parent.state[0]))
-            y1 = np.array((self.nodes[i].parent.state[1]))
-            x2 = np.array((self.nodes[i].state[0])) - x1 
-            y2 = np.array((self.nodes[i].state[1])) - y1 
-            self.ax.quiver(x1, y1, x2, y2, units='xy' ,scale=np.sqrt(x2**2 + y2**2), color='b')
-            plt.pause(0.0001)
-
-        X = [node.state[0] for node in self.path]
-        Y = [node.state[1] for node in self.path]
-        plt.plot(X, Y, '-r')
+        self.anim = FuncAnimation(
+                self.fig, 
+                self._update,
+                interval=5,
+                init_func=self.init,
+                frames=range(len(self.nodes)//self.step_size),
+                blit=True)
 
         plt.show()
         # self.save_animation("../results/matplotlib.mp4")

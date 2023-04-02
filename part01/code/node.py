@@ -5,40 +5,42 @@ class ActionSet:
     Class containing all the available node actions.
     """
 
-    def __init__(self, step_size : int = 5, angles : list = [-60, -30, 0, 30, 60]):
-        """
-        Parameters
-        ----------
-        step_size : int, optional
-            The step size of the actions, by default 5
-        angles : list, optional
-            The angles of the actions, by default [-60, -30, 0, 30, 60]
-        """
-        self.step_size = step_size
-        self.angles = angles
+    def __init__(self, RPM1 : float, RPM2 : float):
+        self.r = 0.038
+        self.l = 0.354
+        self.action_set = np.array([[0, RPM1], [RPM1, 0], [RPM1, RPM1], [0, RPM2],
+         [RPM2, 0], [RPM2, RPM2], [RPM1, RPM2], [RPM2, RPM1]])
 
     def get_actions(self, state):
-        """
-        Get the actions available for the given state.
 
-        Parameters
-        ----------
-        state : tuple
-            The state for which to get the actions.
-
-        Returns
-        -------
-        dict
-            A dictionary of actions, where the key is the action and the value is the cost of the action.
-        """
         actions = {}
-        for angle in self.angles:
-            new_angle = (state[2] + angle) % 360
-            x_diff = self.step_size * np.cos(np.deg2rad(new_angle))
-            y_diff = self.step_size * np.sin(np.deg2rad(new_angle))
-            actions[(x_diff, y_diff, angle)] = self.step_size
+        for action in self.action_set:
+            actions[str(action)] = self._get_action_cost(state, action)
         return actions
     
+    def _get_action_cost(self, state : np.array, action : np.array) -> float:
+        t = 0
+        dt = 0.1
+        D = 0
+        x_init, y_init, theta_init = state[0], state[1], state[2]
+        positions = []
+
+        while t < 1:
+            t = t + dt
+            
+            x_next = x_init + 0.5 * self.r * (action[0] + action[1]) * np.cos(np.deg2rad(theta_init)) * dt
+            y_next = y_init + 0.5 * self.r * (action[0] + action[1]) * np.sin(np.deg2rad(theta_init)) * dt
+            theta_next = theta_init + (self.r / self.l) * (action[1] - action[0]) * dt
+            theta_next %= 360
+            
+            D += np.sqrt((0.5 * self.r * (action[0] + action[1]) * np.sin(np.deg2rad(theta_init)) * dt)**2 + (0.5 * self.r * (action[0] + action[1]) * np.cos(np.deg2rad(theta_init)) * dt)**2)
+
+            positions.append([x_next, y_next])
+            x_init, y_init, theta_init = x_next, y_next, theta_next
+        
+        new_state = np.array([x_next, y_next, theta_next])
+        return new_state, D
+
 class Node:
     """
     A node in the search tree.
@@ -56,6 +58,7 @@ class Node:
         """        
         self.state = np.array(state)    
         self.cost_to_come = cost_to_come
+        self.cost = 0
         self.rounded_state = self._round(self.state)
 
         self.parent = parent
@@ -113,7 +116,7 @@ class Node:
         float
             The Euclidean distance between the current state and the goal state
         """
-        return np.linalg.norm(self.rounded_state[:2] - goal_node.state[:2])#*0.8 + np.abs(self.state[2] - goal_node.state[2])*0.2
+        return np.linalg.norm(self.rounded_state[:2] - goal_node.state[:2])
     
     def get_children(self) -> list:
         """
@@ -126,10 +129,7 @@ class Node:
         """
         children = []
         actions = self.action_set.get_actions(self.state)
-        for action, cost in actions.items():
-            new_state = self.state + np.array(action)
-            new_state[2] = new_state[2] % 360
-            child = Node(new_state, cost, self)
-            children.append(child)
+        for new_state, cost in actions.values():
+            children.append(Node(new_state, self.cost_to_come + cost, self))
 
         return children

@@ -7,7 +7,7 @@ from visualizer import Visualizer
 import readline
 
 def main():
-    map = Map(width=600, height=250)
+    map = Map(width=600, height=200)
 
     while True:
         try:
@@ -15,8 +15,8 @@ def main():
             if int(s_x) < 0 or int(s_y) < 0 or int(s_theta) < 0:
                 print("\nStart state must be non-negative. Try again.")
                 continue
-            x, y, theta = input("Enter end state (x y theta) : ").split()
-            if int(x) < 0 or int(y) < 0 or int(theta) < 0:
+            x, y = input("Enter end state (x y) : ").split()
+            if int(x) < 0 or int(y) < 0:
                 print("\nEnd state must be non-negative. Try again.")
                 continue
 
@@ -26,16 +26,18 @@ def main():
                 continue
             map.set_clearance_radius(int(clearance), int(radius))
 
-            step_size = int(input("Enter step size [1-10] : "))
-            if step_size < 1 or step_size > 10:
-                print("\nStep size must be between 1 and 10. Try again.")
+            RPM1, RPM2 = input("Enter RPM1 and RPM2 (RPM1, RPM2) : ").split()
+            if int(RPM1) < 0 or int(RPM2) < 0:
+                print("\nRPM1 and RPM2 must be non-negative. Try again.")
                 continue
-            action_set = ActionSet(step_size)
+            RPM1 = 2 * np.pi * int(RPM1) / 60
+            RPM2 = 2 * np.pi * int(RPM2) / 60
+            action_set = ActionSet(RPM1=RPM1, RPM2=RPM2)
             Node.set_resolution((0.5, 0.5, 30))
             Node.set_actionset(action_set)
 
             start = Node((int(s_x), int(s_y), int(s_theta)), 0, None)
-            end = Node((int(x), int(y), int(theta)), np.inf, None)
+            end = Node((int(x), int(y), 0), np.inf, None)
 
             if map.is_valid(start) and map.is_valid(end):
                 print("\nStarting search...")
@@ -64,7 +66,7 @@ def main():
 
     visualizer = Visualizer(map, path, nodes)
     # visualizer.plot(step_size=200)
-    visualizer.record_opencv(map, step_size=1, record=True)
+    visualizer.record_opencv(map, step_size=1, record=False)
 
 if __name__ == "__main__":
 

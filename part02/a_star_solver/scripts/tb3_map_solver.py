@@ -1,5 +1,4 @@
-# /usr/bin/env python3
-
+#!/usr/bin/python3
 
 # Wrting a ROS publisher node
 import rospy

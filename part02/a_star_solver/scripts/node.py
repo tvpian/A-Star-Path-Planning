@@ -16,7 +16,7 @@ class ActionSet:
             The RPM of the second motor.
         """
         self.r = 3.3
-        self.l = 20
+        self.l = 16
         self.map = map
         self.action_set = np.array([[0, RPM1], [RPM1, 0], [RPM1, RPM1], [0, RPM2],
                                     [RPM2, 0], [RPM2, RPM2], [RPM1, RPM2], [RPM2, RPM1]])

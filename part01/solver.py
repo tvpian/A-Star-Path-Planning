@@ -97,11 +97,11 @@ class AStarSolver:
         list
             The path from the start node to the goal node.
         """
-        self.open.put((0, self.start.cost_to_go(self.goal), self.start))
+        self.open.put((0, self.start.cost_to_come, self.start.cost_to_go(self.goal), self.start))
         self.open_hash.add(hash(self.start))
 
         while not self.open.empty():
-            node = self.open.get()[2]
+            node = self.open.get()[1]
             self.open_hash.remove(hash(node))
 
             if self._check_goal(node):
@@ -112,22 +112,22 @@ class AStarSolver:
 
             for child in node.get_children():
                 hash_val = hash(child)
-                if self.map.is_valid(child.state[0], child.state[1]) and not self._check_visited(child):
+                if self.map.is_valid(child) and not self._check_visited(child):
                     if hash_val not in self.closed:
                         if hash_val not in self.open_hash:
                             child.cost_to_come += node.cost_to_come 
                             priority = child.cost_to_come + child.cost_to_go(self.goal)
                             child.cost = priority
-                            self.open.put((priority, child.cost_to_go(self.goal), child))
+                            self.open.put((priority, child.cost_to_come, child.cost_to_go(self.goal), child))
                             self.open_hash.add(hash_val)
                         else:
                             for i in range(self.open.qsize()):
-                                if self.open.queue[i][2] == child:
+                                if self.open.queue[i][1] == child:
                                     cost = node.cost_to_come + child.cost_to_come
-                                    if cost < self.open.queue[i][2].cost:
-                                        self.open.queue[i][2].parent = node
-                                        self.open.queue[i][2].cost_to_come = cost
-                                        self.open.queue[i][2].cost = cost + self.open.queue[i][2].cost_to_go(self.goal)
+                                    if cost < self.open.queue[i][1].cost:
+                                        self.open.queue[i][1].parent = node
+                                        self.open.queue[i][1].cost_to_come = cost
+                                        self.open.queue[i][1].cost = cost + self.open.queue[i][1].cost_to_go(self.goal)
                            
         return None
 

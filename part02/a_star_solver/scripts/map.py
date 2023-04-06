@@ -37,10 +37,10 @@ class Map:
                     if i < self.clearance or i >= (self.width - self.clearance) or j < self.clearance or j >= (self.height - self.clearance):
                         self.map[i][j] = 1
                         
-                    if (i >= (150 - self.clearance)) and (i <= (165 + self.clearance)) and j <= (125 - self.clearance) and (j >= 0):
+                    if (i >= (150 - self.clearance)) and (i <= (165 + self.clearance)) and j <= (75 - self.clearance) and (j >= 0):
                         self.map[i][j] = 1
 
-                    if (i >= (250 - self.clearance)) and (i <= (265 + self.clearance)) and j >= (75 + self.clearance) and (j <= self.height):
+                    if (i >= (250 - self.clearance)) and (i <= (265 + self.clearance)) and j >= (125 + self.clearance) and (j <= self.height):
                         self.map[i][j] = 1
 
                     if ((i-400)**2 + (j-110)**2 <= (50 + self.clearance)**2 ):

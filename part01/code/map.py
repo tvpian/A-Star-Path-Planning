@@ -26,6 +26,14 @@ class Map:
 
         self.map = np.zeros((width, height))
         self.workspace = mplPath.Path(np.array([(0, 0), [width-1, 0], [width-1, height-1], [0, height-1], [0, 0]]))
+        
+        self.clearance = 10
+        self._set_obstacles()
+
+    def set_clearance_radius(self, clearance : int) -> None:
+        self._radius = 10
+        self.clearance = clearance + 10
+        self._set_obstacles()
 
     def _set_obstacles(self):
         """
@@ -37,23 +45,17 @@ class Map:
                     if i < self.clearance or i >= (self.width - self.clearance) or j < self.clearance or j >= (self.height - self.clearance):
                         self.map[i][j] = 1
                         
-                    if (i >= (150 - self.clearance)) and (i <= (165 + self.clearance)) and j <= (125 - self.clearance) and (j >= 0):
+                    if (i >= (150 - self.clearance)) and (i <= (165 + self.clearance)) and (j >= (75 - self.clearance)) and (j <= self.height):
                         self.map[i][j] = 1
 
-                    if (i >= (250 - self.clearance)) and (i <= (265 + self.clearance)) and j >= (75 + self.clearance) and (j <= self.height):
+                    if (i >= (250 - self.clearance)) and (i <= (265 + self.clearance)) and (j >= 0) and (j <= (125 + self.clearance)):
                         self.map[i][j] = 1
 
-                    if ((i-400)**2 + (j-110)**2 <= (50 + self.clearance)**2 ):
+                    if ((i-400)**2 + (j-90)**2 <= (50 + self.clearance)**2):
                         self.map[i][j] = 1
                 except Exception:
                     print(Exception)
                     
-
-    def set_clearance_radius(self, clearance : int) -> None:
-        self._radius = 10.5
-        self.clearance = clearance + self._radius 
-        self._set_obstacles()
-
     def _is_obstacle(self, i, j):
         """
         Check if the given state is an obstacle.
@@ -73,16 +75,14 @@ class Map:
 
         if i < self.clearance or i >= (self.width - self.clearance) or j < self.clearance or j >= (self.height - self.clearance):
             return True
-
-
-        if (i >= (150 - self.clearance)) and (i <= (165 + self.clearance)) and j >= (75 - self.clearance) and (j >= 0):
+                        
+        if (i >= (150 - self.clearance)) and (i <= (165 + self.clearance)) and (j >= (75 - self.clearance)) and (j <= self.height):
             return True
-
-
-        if (i >= (250 - self.clearance)) and (i <= (265 + self.clearance)) and j <= (125 + self.clearance) and (j <= self.height):
+        
+        if (i >= (250 - self.clearance)) and (i <= (265 + self.clearance)) and (j >= 0) and (j <= (125 + self.clearance)):
             return True
-
-        if ((i-400)**2 + (j-110)**2 <= (50 + self.clearance)**2):
+        
+        if ((i-400)**2 + (j-90)**2 <= (50 + self.clearance)**2):
             return True
 
     def _is_in_bounds(self, x, y):

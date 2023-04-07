@@ -23,7 +23,7 @@ def main():
 
             clearance = input("Enter clearance (clearance) : ")
             if int(clearance) < 0:
-                print("\nClearance and radius must be non-negative. Try again.")
+                print("\nClearance must be non-negative. Try again.")
                 continue
             map.set_clearance_radius(int(clearance))
 
@@ -65,13 +65,13 @@ def main():
     print(f"Final node in the path : {path[-1].state}")
     print(f"Number of nodes explored : {len(nodes)}")
 
-    thetas = [node.state[2] for node in path]
-    rpm1s  = [node.parent_action[0] if node.parent_action else 0 for node in path]
-    rpm2s  = [node.parent_action[1] if node.parent_action else 0 for node in path]
-    data = np.array([thetas, rpm1s, rpm2s])
-    print(len(thetas), len(rpm1s), len(rpm2s))
-    df = pd.DataFrame(data.T, index=None, columns=['theta', 'rpm1', 'rpm2'])
-    df.to_csv('file3.csv')
+    # thetas = [node.state[2] for node in path]
+    # rpm1s  = [node.parent_action[0] if node.parent_action else 0 for node in path]
+    # rpm2s  = [node.parent_action[1] if node.parent_action else 0 for node in path]
+    # data = np.array([thetas, rpm1s, rpm2s])
+    # print(len(thetas), len(rpm1s), len(rpm2s))
+    # df = pd.DataFrame(data.T, index=None, columns=['theta', 'rpm1', 'rpm2'])
+    # df.to_csv('file3.csv')
 
     visualizer = Visualizer(map, path, nodes)
     # visualizer.plot(step_size=200)

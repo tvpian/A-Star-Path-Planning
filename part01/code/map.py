@@ -26,9 +26,6 @@ class Map:
 
         self.map = np.zeros((width, height))
         self.workspace = mplPath.Path(np.array([(0, 0), [width-1, 0], [width-1, height-1], [0, height-1], [0, 0]]))
-        
-        self.clearance = 10
-        self._set_obstacles()
 
     def set_clearance_radius(self, clearance : int) -> None:
         self._radius = 10

@@ -36,13 +36,27 @@
 
 * **Part 02 - ROS**
 
+    - Build the ROS package using the following command:
+        ```
+        catkin_make
+        ```
+    - Source the ROS workspace using the following command:
+        ```
+        source devel/setup.bash
+        ```
+    
     - Enter the following command to launch the ROS node:
         ```
         roslaunch a_star_solver astar_map.launch
         ```
 
+    - If the roslaunch command doesn't work then navigate to the launch folder in the submission folder and use the following command:
+        ```
+        roslaunch astar_map.launch
+        ```
+
     - Press the enter key once to display the options for the program.
-    
+
     - Once you run the program, enter the start and goal states in the format shown below:
         ```
         Enter start state (x y theta) : 0 0 0

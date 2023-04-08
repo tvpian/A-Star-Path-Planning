@@ -20,7 +20,7 @@ def main():
                 print("\nEnd state must be non-negative. Try again.")
                 continue
 
-            clearance = input("Enter clearance (clearance) : ")
+            clearance = input("Enter clearance in cms (clearance - whole number) : ")
             if int(clearance) < 0:
                 print("\nClearance must be non-negative. Try again.")
                 continue
@@ -65,7 +65,7 @@ def main():
     print(f"Number of nodes explored : {len(nodes)}")
 
     visualizer = Visualizer(map, path, nodes)
-    # visualizer.plot(step_size=1)
+    visualizer.plot(step_size=1)
     visualizer.record_opencv(map, step_size=1, record=False)
 
 if __name__ == "__main__":

@@ -1,13 +1,18 @@
-# ENPM 661 - Project 3 - Phase
+# ENPM 661 - Project 3 - Phase 2
+
+## Team Members
+* Abhijay (UID - 118592619)
+* Tharun Puthanveettil (UID - 119069516)
 
 ## Dependencies
 
 * python3 interpreter
 * Python packages - numpy, time, matplotlib, copy, math, collections, queue, opencv, readline
+* ROS - noetic, turtlebot3(needs to be installed), gazebo_ros
 
 ## Execution
 
-* **A\* Solver** 
+* **Part 01 - A\* Solver** 
     
     - To execute the program for this problem, navigate to the submission folder and use the following commands
         ```
@@ -17,10 +22,10 @@
 
     - Once you run the program, enter the start and goal states in the format shown below:
         ```
-        Enter start state (x y theta) : 11 11 0
-        Enter end state (x y) : 50 50
-        Enter clearance and radius (clearance, radius) : 5 5
-        Enter RPM1 and RPM2 (RPM1, RPM2) : 1000 1000
+        Enter start state (x y theta) : 50 100 0
+        Enter end state (x y) : 300 180
+        Enter clearance (clearance) : 5
+        Enter RPM1 and RPM2 (RPM1, RPM2) : 30 60
         ```
 
     - Each line of input should be in the format x y theta where x, y and theta are the x and y coordinates of the point and theta is the orientation of the robot respectively.
@@ -29,34 +34,57 @@
 
     - The program will not run if the clearance and radius are not entered in the format clearance, radius.
 
-    - Since the quiver plot in matplotlib is not very efficient, the animation can be played in three ways.
+* **Part 02 - ROS**
 
-    - The first method is using OpenCV. Please use the function in line 51 of the a_star_Abhijay_Tharun.py file. (Suggested method) To record the animation, please set the record variable to True in the visualizer.record_opencv() function in the a_star_Abhijay_Tharun.py file (line 51).
+    - Enter the following command to launch the ROS node:
+        ```
+        roslaunch a_star_solver astar_map.launch
+        ```
 
-    - The second method is using matplotlib scatter plot. Please use the function in line 50 of the a_star_Abhijay_Tharun.py file.
-
-    - The third method is using matplotlib quiver plot. Please uncomment lines 99-103 and comment lines 103-104 in the visualizer.py file. (Not recommended)
-
-    - To increase the speed of the animation, change the value of step_size in the visualizer.plot() and visualizer.record_opencv() functions in the a_star_Abhijay_Tharun.py file (lines 50/51).
+    - Press the enter key once to display the options for the program.
+    
+    - Once you run the program, enter the start and goal states in the format shown below:
+        ```
+        Enter start state (x y theta) : 0 0 0
+        Enter end state (x y) : 5 0
+        Enter clearance (clearance) : 5
+        Enter RPM1 and RPM2 (RPM1, RPM2) : 30 60
+        ```
+    - The inputs for the coordinates should be with respect to the Gazebo world frame. 
 
 ## Results
-* **Dijkstra's Solver** 
+* **A\* Solver** 
     
     - The outputs is as shown below:
         ```
-        Enter start state (x y theta) : 125 125 0
-        Enter end state (x y theta) : 11 11 0
-        Enter clearance and radius (clearance, radius) : 5 5
-        Enter RPM1 and RPM2 (RPM1, RPM2) : 1000 1000
+        Enter start state (x y theta) : 50 100 0
+        Enter end state (x y) : 300 180
+        Enter clearance (clearance) : 5
+        Enter RPM1 and RPM2 (RPM1, RPM2) : 30 60
 
         Starting search...
 
-        Found path in 2.6980650424957275 seconds.
-        Distance from state to goal :  76193.22465109696
-        Final node in the path : [48.76812248 49.25284795 37.09564207]
-        Number of nodes explored : 3870
+        Found path in 1.832632303237915 seconds.
+        Distance from state to goal :  3.4211943997592833
+        Final node in the path : [299.95249664 181.2539106   65.34      ]
+        Number of nodes explored : 1829
         ```
     - The animation video link is [here](https://drive.google.com/drive/folders/19rUXHqT4XGNATDRHBpmevm8oGCOTXusi?usp=sharing).
 
+* **ROS**
+    - The outputs is as shown below:
+        ```
+        Enter start state (x y theta) : 50 100 0
+        Enter end state (x y) : 550 100
+        Enter clearance (clearance) : 5
+        Enter RPM1 and RPM2 (RPM1, RPM2) : 50 100
+
+        Starting search...
+
+        Found path in 0.5591976642608643 seconds.
+        Distance from state to goal :  6.4622560884342075
+        Final node in the path : [549.42340336 100.48810098 251.1       ]
+        Number of nodes explored : 593
+        ```
 ## Help
 For any assistance with executing the programs or questions related to them, please reach out to us at abhijay@umd.edu or tvpian@umd.edu.

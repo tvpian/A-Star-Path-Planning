@@ -5,13 +5,17 @@
   <arg name="z_pos" default="0.0"/>
 
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
-    <arg name="world_name" value="$(find turtlebot3_gazebo)/worlds/map.world"/>
+    <arg name="world_name" value="$(find a_star_solver)/worlds/map.world"/>
     <arg name="paused" value="false"/>
     <arg name="use_sim_time" value="true"/>
     <arg name="gui" value="true"/>
     <arg name="headless" value="false"/>
     <arg name="debug" value="false"/>
   </include>
+
+  
+  <node pkg="a_star_solver" type="a_star_Abhijay_Tharun.py" name="a_star_solver" output="screen"></node>
+  
 
   <param name="robot_description" command="$(find xacro)/xacro --inorder $(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro" />
 

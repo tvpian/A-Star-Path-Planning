@@ -30,7 +30,7 @@ class Visualizer:
         self.x_vals, self.y_vals = [],[]
         self.stop_running=False
 
-    def plot(self, step_size : int = 500) -> None:
+    def plot(self, step_size : int = 500, record : bool = False) -> None:
         """
         Plot the path and nodes.
         Parameters
@@ -38,7 +38,7 @@ class Visualizer:
         step_size : int
             The number of nodes to plot per frame.
         """
-        self.step_size = step_size
+        # self.step_size = step_size
         # self.anim = FuncAnimation(
         #         self.fig, 
         #         self._update,
@@ -51,19 +51,40 @@ class Visualizer:
         for i in range(len(self.nodes)):
             if self.nodes[i].parent is None:
                 continue
-            x1 = np.array((self.nodes[i].parent.state[0]))
-            y1 = np.array((self.nodes[i].parent.state[1]))
-            x2 = np.array((self.nodes[i].state[0])) - x1 
-            y2 = np.array((self.nodes[i].state[1])) - y1 
-            self.ax.quiver(x1, y1, x2, y2, units='xy' ,scale=np.sqrt(x2**2 + y2**2), color='b')
-            plt.pause(0.0001)
+            self.plot_curve(self.nodes[i].parent.state[0], self.nodes[i].parent.state[1], self.nodes[i].parent.state[2], self.nodes[i].parent_action[0], self.nodes[i].parent_action[1])
+            self.plot_curve(self.nodes[i].state[0], self.nodes[i].state[1], self.nodes[i].state[2], self.nodes[i].parent_action[0], self.nodes[i].parent_action[1])
+            plt.pause(0.000001)
 
         X = [node.state[0] for node in self.path]
         Y = [node.state[1] for node in self.path]
         plt.plot(X, Y, '-r')
 
+        if record:
+            self.save_animation('animation.mp4')
         plt.show()
-        # self.save_animation("../results/matplotlib.mp4")
+
+    def plot_curve(self,xi, yi, theta, UL, UR):
+        t = 0
+        r = 3.3
+        L = 20
+        Xn=xi
+        Yn=yi
+        Thetan = np.deg2rad(theta)
+        D=0
+        dt = 0.1
+        while t<1:
+            t = t + dt
+            Xs = Xn
+            Ys = Yn
+            Xn += 0.5*r * (UL + UR) * np.cos(Thetan) * dt
+            Yn += 0.5*r * (UL + UR) * np.sin(Thetan) * dt
+            Thetan += (r / L) * (UR - UL) * dt
+            if not self.map.is_valid(Xn, Yn):
+                break
+            plt.plot([Xs, Xn], [Ys, Yn], color="blue")
+
+        Thetan = 180 * (Thetan) / 3.14
+        return Xn, Yn, Thetan, D
 
     def save_animation(self, filename) -> None:
         """
@@ -105,23 +126,15 @@ class Visualizer:
         for i in range(self.step_size):
             if self.nodes[(frame * self.step_size) + i].parent is None:
                 continue
-            # x1 = np.array((self.nodes[(frame * self.step_size) + i].parent.state[0]))
-            # y1 = np.array((self.nodes[(frame * self.step_size) + i].parent.state[1]))
-            # x2 = np.array((self.nodes[(frame * self.step_size) + i].state[0])) - x1 
-            # y2 = np.array((self.nodes[(frame * self.step_size) + i].state[1])) - y1 
-            # self.ax.quiver(x1, y1, x2, y2,units='xy' ,scale=1)
-            self.x_vals.append(self.nodes[(frame*self.step_size) + i].state[0])
-            self.y_vals.append(self.nodes[(frame*self.step_size) + i].state[1])
+            self.x_vals.append(self.nodes[(frame*self.step_size) + i].rounded_state[0])
+            self.y_vals.append(self.nodes[(frame*self.step_size) + i].rounded_state[1])
 
         self.ln.set_data(self.x_vals, self.y_vals)
 
         if frame == (len(self.nodes))//self.step_size-1:
-            self.ln.set_data([],[])
-
-            X = [n.state[0] for n in self.path]
-            Y = [n.state[1] for n in self.path]
-            self.ln, = plt.plot(X, Y, color='green', linewidth=2)
-
+            X = [node.state[0] for node in self.path]
+            Y = [node.state[1] for node in self.path]
+            self.ln, = plt.plot(X, Y, '-r')
             self.stop_running=True
         
         return self.ln,
@@ -152,9 +165,9 @@ class Visualizer:
             y1 = map.height - self.nodes[i].parent.rounded_state[1] 
             x2 = self.nodes[i].rounded_state[0]  
             y2 = map.height - self.nodes[i].rounded_state[1] 
-            cv2.arrowedLine(frame, (int(x1), int(y1)), (int(x2), int(y2)), (255,0,0), 1, 1)
-        #     if record:
-        #         result.write(frame) 
+            cv2.line(frame, (int(x1), int(y1)), (int(x2), int(y2)), (255,0,0), 1, 1)
+            if record:
+                result.write(frame) 
         
         cv2.namedWindow("Frame", cv2.WINDOW_NORMAL)
         cv2.resizeWindow("Frame", 1280, 720)
@@ -169,7 +182,7 @@ class Visualizer:
             y1 = map.height - self.path[i].state[1]
             x2 = self.path[i+1].state[0]
             y2 = map.height - self.path[i+1].state[1]
-            cv2.arrowedLine(frame, (int(x1), int(y1)), (int(x2), int(y2)), (255,255,255), 1, 1)
+            cv2.line(frame, (int(x1), int(y1)), (int(x2), int(y2)), (255,255,255), 1, 1)
             if record:
                 result.write(frame) 
         

@@ -27,7 +27,6 @@ class AStarSolver:
         self.closed = OrderedDict()
 
         self.goal_threshold = 1.5
-        self.angle_threshold = 30
 
         self.visited = np.zeros((int(self.map.width/self.start.resolution[0]), int(self.map.height/self.start.resolution[1])))
 
@@ -97,11 +96,11 @@ class AStarSolver:
         list
             The path from the start node to the goal node.
         """
-        self.open.put((0, self.start.cost_to_go(self.goal), self.start))
+        self.open.put((0, self.start))
         self.open_hash.add(hash(self.start))
 
         while not self.open.empty():
-            node = self.open.get()[2]
+            node = self.open.get()[1]
             self.open_hash.remove(hash(node))
 
             if self._check_goal(node):
@@ -118,16 +117,16 @@ class AStarSolver:
                             child.cost_to_come += node.cost_to_come 
                             priority = child.cost_to_come + child.cost_to_go(self.goal)
                             child.cost = priority
-                            self.open.put((priority, child.cost_to_go(self.goal), child))
+                            self.open.put((priority, child))
                             self.open_hash.add(hash_val)
                         else:
                             for i in range(self.open.qsize()):
-                                if self.open.queue[i][2] == child:
+                                if self.open.queue[i][1] == child:
                                     cost = node.cost_to_come + child.cost_to_come
-                                    if cost < self.open.queue[i][2].cost:
-                                        self.open.queue[i][2].parent = node
-                                        self.open.queue[i][2].cost_to_come = cost
-                                        self.open.queue[i][2].cost = cost + self.open.queue[i][2].cost_to_go(self.goal)
+                                    if cost < self.open.queue[i][1].cost:
+                                        self.open.queue[i][1].parent = node
+                                        self.open.queue[i][1].cost_to_come = cost
+                                        self.open.queue[i][1].cost = cost + self.open.queue[i][1].cost_to_go(self.goal)
                            
         return None
 

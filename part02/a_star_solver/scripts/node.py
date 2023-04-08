@@ -60,7 +60,7 @@ class ActionSet:
             The new state and the cost of the action.
         """
         t = 0
-        dt = 0.2
+        dt = 0.01
         D = 0
         x_init, y_init, theta_init = state[0], state[1], state[2]
         positions = []
@@ -73,7 +73,7 @@ class ActionSet:
             theta_next = theta_init + np.rad2deg((self.r / self.l) * (action[1] - action[0]) * dt)
             theta_next %= 360
             
-            D += np.sqrt((0.5 * self.r * (action[0] + action[1]) * np.sin(np.deg2rad(theta_init)) * dt)**2 + (0.5 * self.r * (action[0] + action[1]) * np.cos(np.deg2rad(theta_init)) * dt)**2)
+            D += np.sqrt((0.5 * self.r * (action[0] + action[1]) * np.sin(np.deg2rad(theta_next)) * dt)**2 + (0.5 * self.r * (action[0] + action[1]) * np.cos(np.deg2rad(theta_next)) * dt)**2)
 
             if not self.map.is_valid(x_next, y_next):
                 return None, None
@@ -82,7 +82,7 @@ class ActionSet:
             x_init, y_init, theta_init = x_next, y_next, theta_next
 
         
-        new_state = np.array([round(x_next), round(y_next), round(theta_next)])
+        new_state = np.array([x_next, y_next, theta_next])
         return new_state, D
 
 class Node:
@@ -161,7 +161,7 @@ class Node:
         float
             The Euclidean distance between the current state and the goal state
         """
-        return 4 * np.linalg.norm(self.rounded_state[:2] - goal_node.state[:2])
+        return 2 *np.linalg.norm(self.state[:2] - goal_node.state[:2])
     
     def get_children(self) -> list:
         """
@@ -175,6 +175,6 @@ class Node:
         children = []
         actions = self.action_set.get_actions(self.state)
         for action, (new_state, cost) in actions.items():
-            children.append(Node(new_state, self.cost_to_come + cost, self, action))
+             children.append(Node(new_state, cost, self, action))
 
         return children

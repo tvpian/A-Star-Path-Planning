@@ -18,14 +18,17 @@ class Map:
             The width of the map, by default 600
         height : int, optional
             The height of the map, by default 250
-        clearance : int, optional
-            The clearance of the map, by default 5
         """
         self.width = width
         self.height = height
 
         self.map = np.zeros((width, height))
         self.workspace = mplPath.Path(np.array([(0, 0), [width-1, 0], [width-1, height-1], [0, height-1], [0, 0]]))
+
+    def set_clearance_radius(self, clearance : int) -> None:
+        self._radius = 10.5
+        self.clearance = clearance + self._radius
+        self._set_obstacles()
 
     def _set_obstacles(self):
         """
@@ -37,23 +40,17 @@ class Map:
                     if i < self.clearance or i >= (self.width - self.clearance) or j < self.clearance or j >= (self.height - self.clearance):
                         self.map[i][j] = 1
                         
-                    if (i >= (150 - self.clearance)) and (i <= (165 + self.clearance)) and j <= (75 - self.clearance) and (j >= 0):
+                    if (i >= (150 - self.clearance)) and (i <= (165 + self.clearance)) and (j <= (125 + self.clearance)) and (j >= 0):
                         self.map[i][j] = 1
 
-                    if (i >= (250 - self.clearance)) and (i <= (265 + self.clearance)) and j >= (125 + self.clearance) and (j <= self.height):
+                    if (i >= (250 - self.clearance)) and (i <= (265 + self.clearance)) and (j >= (75 - self.clearance)) and (j <= self.height):
                         self.map[i][j] = 1
 
-                    if ((i-400)**2 + (j-110)**2 <= (50 + self.clearance)**2 ):
+                    if ((i-400)**2 + (j-90)**2 <= (50 + self.clearance)**2):
                         self.map[i][j] = 1
                 except Exception:
                     print(Exception)
                     
-
-    def set_clearance_radius(self, clearance : int) -> None:
-        self._radius = 10.5
-        self.clearance = clearance + self._radius 
-        self._set_obstacles()
-
     def _is_obstacle(self, i, j):
         """
         Check if the given state is an obstacle.
@@ -73,15 +70,13 @@ class Map:
 
         if i < self.clearance or i >= (self.width - self.clearance) or j < self.clearance or j >= (self.height - self.clearance):
             return True
-
-
-        if (i >= (150 - self.clearance)) and (i <= (165 + self.clearance)) and j >= (75 - self.clearance) and (j >= 0):
+                        
+        if (i >= (150 - self.clearance)) and (i <= (165 + self.clearance)) and (j >= (75 - self.clearance)) and (j <= self.height):
             return True
-
-
-        if (i >= (250 - self.clearance)) and (i <= (265 + self.clearance)) and j <= (125 + self.clearance) and (j <= self.height):
+        
+        if (i >= (250 - self.clearance)) and (i <= (265 + self.clearance)) and (j >= 0) and (j <= (125 + self.clearance)):
             return True
-
+        
         if ((i-400)**2 + (j-110)**2 <= (50 + self.clearance)**2):
             return True
 
@@ -147,22 +142,15 @@ class Map:
         ax : axis
             The axis to plot the obstacles on.
         """
-        triangle = [[455, 230], [455, 20], [507.5, 125]]
-        e = patches.Polygon(xy=triangle)
-        ax.add_artist(e)
-        e.set_facecolor('y')
-
-        rect1 = [[95, 105], [155, 105], [155, 0], [95, 0]]
+        rect1 = [[150 - self.clearance, 75 - self.clearance], [165 + self.clearance, 75 - self.clearance], [165 + self.clearance, self.height], [150 - self.clearance, self.height]]
         e = patches.Polygon(xy=rect1)
         ax.add_artist(e)
         e.set_facecolor('y')
 
-        rect2 = [[95, 145], [155, 145], [155, 250], [95, 250]]
+        rect2 = [[250 - self.clearance, 0], [250 - self.clearance, 125 + self.clearance], [265 + self.clearance, 125 + self.clearance], [265 + self.clearance, 0]]
         e = patches.Polygon(xy=rect2)
         ax.add_artist(e)
         e.set_facecolor('y')
 
-        hex = [[300, 202.5], [370, 167.5], [370, 82.5], [300, 47.5], [230,82.5], [230, 167.5]]
-        e = patches.Polygon(xy=hex)
-        ax.add_artist(e)
-        e.set_facecolor('y')
+        circle = plt.Circle((400, 110), 50 + self.clearance, color='y')
+        ax.add_artist(circle)

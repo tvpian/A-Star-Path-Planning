@@ -85,12 +85,14 @@ def main():
             publisher.rate.sleep()
 
             if node == path[-1]:
+                publisher.twist.linear.x = 0
+                publisher.twist.angular.z = 0
+                publisher.vel_pub.publish(publisher.twist)
                 break
             time.sleep(1)
 
         break
-            
-    publisher.publish_velocity(0, 0)
+
 
 if __name__ == "__main__":
 

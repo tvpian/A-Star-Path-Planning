@@ -1,4 +1,4 @@
-# A Star Path Planning for Point Robots
+# A* Path Planning for Point Robots
 
 ## Team
 

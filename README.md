@@ -1,4 +1,4 @@
-# ENPM 661 - Project 3
+# A Star Path Planning for Point Robots
 
 ## Team
 
